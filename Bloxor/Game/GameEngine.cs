@@ -29,6 +29,16 @@ namespace Bloxor.Game
             };
         }
 
+        public void AddObject()
+        {
+            
+        }
+
+        public void RemoveObject()
+        {
+            
+        }
+
         public void Update(int screenWidth, int screenHeight, float timeStamp)
         {
             _screenWidth = screenWidth;
@@ -52,20 +62,24 @@ namespace Bloxor.Game
             const int height = 100;
             
             await _canvas.SetFillStyleAsync("azure");
-            await _canvas.FillRectAsync(0, 0, 1000, 600);
-        
+            await _canvas.FillRectAsync(0, 0, _screenWidth, _screenHeight);
+            
+            await _canvas.SetStrokeStyleAsync("blue");
+            await _canvas.StrokeRectAsync(0, y, width, height);
+            await _canvas.SetStrokeStyleAsync("red");
+            await _canvas.StrokeRectAsync(width, y, width, height);
+            
             await _canvas.SetFontAsync("24px verdana");
-        
-            await _canvas.SetFillStyleAsync("green");
-            await _canvas.FillRectAsync(0, y, width, height);
-        
+            
+            // await _canvas.SetFillStyleAsync("green");
+            // await _canvas.FillRectAsync(0, y, width, height);
+            
             await _canvas.StrokeTextAsync($"time: {_gameTime.ElapsedTime}", width / 6, y + height / 3);
-        
+            
             await _canvas.SetFillStyleAsync("red");
-            await _canvas.FillRectAsync(width, y, width, height);
+            await _canvas.FillRectAsync(2 * width, y, width, height);
             await _canvas.StrokeTextAsync("Yeah, it works!!!", width * 7 / 6, y + height / 3);
             
-            await _canvas.ClearRectAsync(0, 0, width, height);
             await _canvas.SetFillStyleAsync("green");
             await _canvas.FillRectAsync(0, 0, 50, 50);
             await _canvas.DrawImageAsync(_sprite.SpriteSheet, _spritePosition.X, _spritePosition.Y, _sprite.Size.Width,  _sprite.Size.Height);
