@@ -57,32 +57,62 @@ namespace Bloxor.Game
         }
         public async ValueTask Render()
         {
-            const int y = 200;
-            const int width = 300;
-            const int height = 100;
-            
+            await _canvas.ClearRectAsync(0, 0, _screenWidth, _screenHeight);
             await _canvas.SetFillStyleAsync("azure");
             await _canvas.FillRectAsync(0, 0, _screenWidth, _screenHeight);
+
+            var canvas = new Canvas(_canvas);
+            // await canvas.DrawRectangle(0, 0, _screenWidth, _screenHeight, "green", "red");
+            // await canvas.DrawLine(0, 0, _screenWidth, _screenHeight, "blue");
+            var grid = new Grid(new Rectangle(350, 200, 500, 500), 10, 10, "purple");
+
+            var points = new Point[]
+            {
+                new Point(0, 0),
+                new Point(0, 1),
+                new Point(1, 1),
+                new Point(1, 2),
+            };
             
-            await _canvas.SetStrokeStyleAsync("blue");
-            await _canvas.StrokeRectAsync(0, y, width, height);
-            await _canvas.SetStrokeStyleAsync("red");
-            await _canvas.StrokeRectAsync(width, y, width, height);
-            
-            await _canvas.SetFontAsync("24px verdana");
-            
+            var cellWidth =  grid.Width / grid.Columns;
+            var cellHeight = grid.Height / grid.Rows;
+
+            var shape = new Shape(points, "yellow")
+            {
+                Left = grid.Left, 
+                Top = grid.Top, 
+                CellWidth = cellWidth, 
+                CellHeight = cellHeight
+            };
+
+            await grid.Render(canvas);
+            await shape.Render(canvas);
+            // const int y = 200;
+            // const int width = 300;
+            // const int height = 100;
+            //
+            // await _canvas.SetFillStyleAsync("azure");
+            // await _canvas.FillRectAsync(0, 0, _screenWidth, _screenHeight);
+            //
+            // await _canvas.SetStrokeStyleAsync("blue");
+            // await _canvas.StrokeRectAsync(0, y, width, height);
+            // await _canvas.SetStrokeStyleAsync("red");
+            // await _canvas.StrokeRectAsync(width, y, width, height);
+            //
+            // await _canvas.SetFontAsync("24px verdana");
+            //
+            // // await _canvas.SetFillStyleAsync("green");
+            // // await _canvas.FillRectAsync(0, y, width, height);
+            //
+            // await _canvas.StrokeTextAsync($"time: {_gameTime.ElapsedTime}", width / 6, y + height / 3);
+            //
+            // await _canvas.SetFillStyleAsync("red");
+            // await _canvas.FillRectAsync(2 * width, y, width, height);
+            // await _canvas.StrokeTextAsync("Yeah, it works!!!", width * 7 / 6, y + height / 3);
+            //
             // await _canvas.SetFillStyleAsync("green");
-            // await _canvas.FillRectAsync(0, y, width, height);
-            
-            await _canvas.StrokeTextAsync($"time: {_gameTime.ElapsedTime}", width / 6, y + height / 3);
-            
-            await _canvas.SetFillStyleAsync("red");
-            await _canvas.FillRectAsync(2 * width, y, width, height);
-            await _canvas.StrokeTextAsync("Yeah, it works!!!", width * 7 / 6, y + height / 3);
-            
-            await _canvas.SetFillStyleAsync("green");
-            await _canvas.FillRectAsync(0, 0, 50, 50);
-            await _canvas.DrawImageAsync(_sprite.SpriteSheet, _spritePosition.X, _spritePosition.Y, _sprite.Size.Width,  _sprite.Size.Height);
+            // await _canvas.FillRectAsync(0, 0, 50, 50);
+            // await _canvas.DrawImageAsync(_sprite.SpriteSheet, _spritePosition.X, _spritePosition.Y, _sprite.Size.Width,  _sprite.Size.Height);
         }
     }
 }

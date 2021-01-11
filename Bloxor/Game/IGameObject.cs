@@ -1,6 +1,6 @@
 using System.Drawing;
 using System.Threading.Tasks;
-using Blazor.Extensions.Canvas.Canvas2D;
+
 
 namespace Bloxor.Game
 {
@@ -13,7 +13,7 @@ namespace Bloxor.Game
         public bool Enabled { get; set; }
         public Point Speed { get; set; }
         public string BackgroundColor { get; set; }
-        public string BoarderColor { get; set; }
+        public string BorderColor { get; set; }
         public int Left { get; }
         public int Top { get; }
         public int Right { get; }
@@ -25,7 +25,7 @@ namespace Bloxor.Game
 
         public void Update(int screenWidth, int screenHeight, float timeStamp);
         
-        public ValueTask Render(Canvas2DContext canvas);
+        public ValueTask Render(ICanvas canvas);
         
     }
 }

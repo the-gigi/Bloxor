@@ -10,24 +10,47 @@ namespace Bloxor.Game
         {
             Visible = true;
             Enabled = true;
+            BorderColor = "red";
+            BackgroundColor = "";
         }
         
         public int ScreenWidth { get; set; }
         public int ScreenHeight { get; set; }
-        public Rectangle Bounds { get; set; }
+        
         public bool Visible { get; set; }
         public bool Enabled { get; set; }
         public Point Speed { get; set; }
         public string BackgroundColor { get; set; }
-        public string BoarderColor { get; set; }
+        public string BorderColor { get; set; }
         
-        public int Left => Bounds.Left;
-        public int Top => Bounds.Top;
+        public Rectangle Bounds { get; set; }
+        public int Left
+        {
+            get => Bounds.Left;
+            set => Bounds = new Rectangle(value, Bounds.Top, Bounds.Width, Bounds.Height);
+        }
+
+        public int Top
+        {
+            get => Bounds.Top;
+            set => Bounds = new Rectangle( Bounds.Left, value, Bounds.Width, Bounds.Height);
+        }
+
         public int Right => Bounds.Right;
         public int Bottom => Bounds.Bottom;
         
-        public int Width => Bounds.Width;
-        public int Height => Bounds.Width;
+        public int Width
+        {
+            get => Bounds.Width;
+            set => Bounds = new Rectangle( Bounds.Left, Bounds.Top, value, Bounds.Height);
+        }
+
+        public int Height
+        {
+            get => Bounds.Width;
+            set => Bounds = new Rectangle( Bounds.Left, Bounds.Top, Bounds.Width, value);
+        }
+        
 
         public int DX => Speed.X;
         public int DY => Speed.Y;
@@ -38,19 +61,13 @@ namespace Bloxor.Game
             ScreenHeight = screenHeight;
         }
 
-        public virtual async ValueTask Render(Canvas2DContext canvas)
+        public virtual async ValueTask Render(ICanvas canvas)
         {
-            if (BackgroundColor != "")
+            if (BorderColor == "" && BackgroundColor == "")
             {
-                await canvas.SetFillStyleAsync(BackgroundColor);
-                await canvas.FillRectAsync(Left, Top, Width, Height);
+                return;
             }
-
-            if (BoarderColor != "")
-            {
-                await canvas.SetStrokeStyleAsync(BoarderColor);
-                await canvas.FillRectAsync(Left, Top, Width, Height);
-            }
+            await canvas.DrawRectangle(Left, Top, Width, Height, BorderColor, BackgroundColor);
         }        
     }
 }

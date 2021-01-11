@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Threading.Tasks;
 using Blazor.Extensions.Canvas.Canvas2D;
 
@@ -5,33 +6,34 @@ namespace Bloxor.Game
 {
     public class Grid : GameObject
     {
-        private string Color { get;  }
-        private int Rows { get; }
-        private int Columns { get; }
+        private string LineColor { get;  }
+        public int Rows { get; }
+        public int Columns { get; }
 
-        
-        public Grid(int rows, int columns, string color)
+        public Grid(Rectangle bounds, int rows, int columns, string lineColor)
         {
-            Color = color;
+            Bounds = bounds;
+            LineColor = lineColor;
             Rows = rows;
             Columns = columns;
         }
 
-        public override async ValueTask Render(Canvas2DContext canvas)
+        public override async ValueTask Render(ICanvas canvas)
         {
             await base.Render(canvas);
             var cellWidth =  Width / Columns;
             var cellHeight = Height / Rows;
-
-            await canvas.SetStrokeStyleAsync(Color);
-            for (var row = 0; row < Rows; ++row)
+            
+            for (var row = 0; row <= Rows; ++row)
             {
-                var top = Top + row * cellHeight;
-                for (var col = 0; col < Columns; ++col)
-                {
-                    var left = Left + col * cellWidth;
-                    await canvas.StrokeRectAsync(left, top, cellWidth, cellHeight);
-                }
+                var y = row * cellHeight;
+                await canvas.DrawLine(Left, Top + y, Left + Width, Top + y, LineColor);
+            }
+            
+            for (var col = 0; col <= Columns; ++col)
+            {
+                var x = col * cellWidth;
+                await canvas.DrawLine(Left + x, Top, Left + x, Top + Height, LineColor);
             }
         }
     }
