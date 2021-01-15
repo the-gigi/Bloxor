@@ -55,6 +55,19 @@ namespace Bloxor.Game
         public int DX => Speed.X;
         public int DY => Speed.Y;
 
+        
+        public void OnMouseMove(int x, int y)
+        {
+        }
+        
+        public void OnMouseDown()
+        {
+        }        
+
+        public void OnMouseUp()
+        {
+        }        
+        
         public virtual void Update(int screenWidth, int screenHeight, float timeStamp)
         {
             ScreenWidth = screenWidth;

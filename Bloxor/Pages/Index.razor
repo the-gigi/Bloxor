@@ -1,12 +1,9 @@
 ﻿@page "/"
 @using System.Drawing
 @using Blazor.Extensions
-@using Blazor.Extensions.Canvas.Canvas2D
 @using Bloxor.Game
 
 @inject IJSRuntime JsRuntime;
-
-<img @ref="_gameEngine.Spritesheet" hidden src="assets/blazor.png" />
 
 <div id="canvasContainer" style="position: fixed; opacity: 1; background-color: black; width: 100%; height: 100%">
     <BECanvas @ref="_canvas"></BECanvas>
@@ -23,11 +20,8 @@
     // float _spriteSpeed = 0.25f;
 
     //Sprite _sprite;
-
-    //readonly GameTime _gameTime = new GameTime();
+    
     readonly GameEngine _gameEngine = new GameEngine();
-
-    //Canvas2DContext _context;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -42,30 +36,25 @@
     [JSInvokable]
     public async ValueTask GameLoop(float timeStamp, int screenWidth, int screenHeight)
     {
-        // await Update(screenWidth, screenHeight);
-        // await Render(screenWidth, screenHeight);
         _gameEngine.Update(screenWidth, screenHeight, timeStamp);
         await _gameEngine.Render();
     }
+    
+    [JSInvokable]
+    public async ValueTask OnMouseMove(int mouseX, int mouseY)
+    {
+        _gameEngine.OnMouseMove(mouseX, mouseY);
+    }
 
-    // private async ValueTask Update(int screenWidth, int screenHeight)
-    // {
-    //     if (_spritePosition.X + _sprite.Size.Width >= screenWidth || _spritePosition.X < 0)
-    //         _spriteDirection.X = -_spriteDirection.X;
-    //
-    //     if (_spritePosition.Y +  _sprite.Size.Height >= screenHeight || _spritePosition.Y < 0)
-    //         _spriteDirection.Y = -_spriteDirection.Y;
-    //
-    //     _spritePosition.X += (int)(_spriteDirection.X * _spriteSpeed * _gameTime.ElapsedTime);
-    //     _spritePosition.Y += (int)(_spriteDirection.Y * _spriteSpeed * _gameTime.ElapsedTime);
-    // }
+    [JSInvokable]
+    public async ValueTask OnMouseDown(object button)
+    {
+        _gameEngine.OnMouseDown();
+    }
 
-    // private async ValueTask Render(int width, int height)
-    // {
-    //     await _context.ClearRectAsync(0, 0, width, height);
-    //     await _context.SetFillStyleAsync("green");
-    //     await _context.FillRectAsync(0, 0, 50, 50);
-    //     await _context.DrawImageAsync(_sprite.SpriteSheet, _spritePosition.X, _spritePosition.Y, _sprite.Size.Width,  _sprite.Size.Height);
-    // }
-
+    [JSInvokable]
+    public async ValueTask OnMouseUp(object button)
+    {
+        _gameEngine.OnMouseUp();
+    }    
 }

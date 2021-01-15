@@ -23,6 +23,10 @@ namespace Bloxor.Game
         public int DX { get; }
         public int DY { get; }
 
+        public void OnMouseMove(int x, int y);
+        public void OnMouseDown();
+        public void OnMouseUp();
+
         public void Update(int screenWidth, int screenHeight, float timeStamp);
         
         public ValueTask Render(ICanvas canvas);
