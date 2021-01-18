@@ -1,6 +1,6 @@
 using System.Drawing;
 using System.Threading.Tasks;
-using Blazor.Extensions.Canvas.Canvas2D;
+using Bloxor.Glazor;
 
 namespace Bloxor.Game
 {
@@ -37,8 +37,12 @@ namespace Bloxor.Game
         }
 
         public int Right => Bounds.Right;
-        public int Bottom => Bounds.Bottom;
-        
+        public int Bottom
+        {
+            get => Bounds.Bottom;
+            set => Bounds = new Rectangle( Bounds.Left, value - Bounds.Height, Bounds.Width, Bounds.Height);
+        }
+
         public int Width
         {
             get => Bounds.Width;
@@ -47,10 +51,11 @@ namespace Bloxor.Game
 
         public int Height
         {
-            get => Bounds.Width;
+            get => Bounds.Height;
             set => Bounds = new Rectangle( Bounds.Left, Bounds.Top, Bounds.Width, value);
         }
-        
+
+        public int ZIndex { get; set; }
 
         public int DX => Speed.X;
         public int DY => Speed.Y;
@@ -66,8 +71,18 @@ namespace Bloxor.Game
 
         public void OnMouseUp()
         {
-        }        
-        
+        }
+
+        public void CenterInRect(Rectangle rect)
+        {
+            if (rect.Width < Width || rect.Height < Height)
+            {
+                return;
+            }
+            
+            Left = rect.Left + (rect.Width - Width) / 2;
+            Top= rect.Top + (rect.Height - Height) / 2;
+        }
         public virtual void Update(int screenWidth, int screenHeight, float timeStamp)
         {
             ScreenWidth = screenWidth;

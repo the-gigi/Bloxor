@@ -2,6 +2,7 @@
 @using System.Drawing
 @using Blazor.Extensions
 @using Bloxor.Game
+@using Bloxor.Glazor
 
 @inject IJSRuntime JsRuntime;
 
@@ -30,6 +31,7 @@
             await JsRuntime.InvokeAsync<object>("initGame", DotNetObjectReference.Create(this));
             var canvas = await _canvas.CreateCanvas2DAsync();
             await _gameEngine.InitAsync(canvas);
+            _gameEngine.AddObject(new BloxorManager(_gameEngine));
         }
     }
 

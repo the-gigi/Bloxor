@@ -1,8 +1,8 @@
-using System.Drawing;
 using System.Threading.Tasks;
 using Blazor.Extensions.Canvas.Canvas2D;
 
-namespace Bloxor.Game
+
+namespace Bloxor.Glazor
 {
     public class Canvas : ICanvas
     {
@@ -20,6 +20,7 @@ namespace Bloxor.Game
             await _canvas.LineToAsync(x2, y2);
             await _canvas.ClosePathAsync();
             await _canvas.StrokeAsync();
+            await _canvas.SetStrokeStyleAsync("");
         }
 
         public async ValueTask DrawRectangle(int left, int top, int width, int height, string color = "", string fillColor = "")
@@ -28,6 +29,7 @@ namespace Bloxor.Game
             {
                 await _canvas.SetFillStyleAsync(fillColor);
                 await _canvas.FillRectAsync(left, top, width, height);
+                await _canvas.SetFillStyleAsync("");
             }
             
             if (color != "")
@@ -35,6 +37,14 @@ namespace Bloxor.Game
                 await _canvas.SetStrokeStyleAsync(color);
                 await _canvas.StrokeRectAsync(left, top, width, height);
             }
+        }
+
+        public async ValueTask DrawText(int left, int top, string text, string font, string color = "", string fillColor = "")
+        {
+            await _canvas.SetFontAsync(font);
+            await _canvas.SetStrokeStyleAsync(color);
+            await _canvas.SetFillStyleAsync(fillColor);
+            await _canvas.StrokeTextAsync(text, left, top);
         }
     }
 }

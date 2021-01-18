@@ -1,6 +1,8 @@
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using Blazor.Extensions.Canvas.Canvas2D;
+using Bloxor.Glazor;
 
 namespace Bloxor.Game
 {
@@ -19,14 +21,18 @@ namespace Bloxor.Game
             Color = color;
         }
 
+        public new int Width => (Cells.Select(c => c.X).Max() + 1) * CellWidth;
+        
         public override async ValueTask Render(ICanvas canvas)
         {
             foreach (var cell in Cells)
             {
                 var left = Left + offset + cell.X * CellWidth;
                 var top = Top + offset + cell.Y * CellHeight;
-                
-                await canvas.DrawRectangle(left, top, CellWidth - 2 * offset, CellHeight - 2 * offset, fillColor: Color);
+
+                var w = CellWidth - 2 * offset;
+                var h = CellHeight - 2 * offset;
+                await canvas.DrawRectangle(left, top, w ,h , Config.ShapeBorderColor, Color);
             }
         }
     }
