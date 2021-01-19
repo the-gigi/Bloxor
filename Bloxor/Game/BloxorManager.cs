@@ -36,13 +36,25 @@ namespace Bloxor.Game
                 _stagingArea.AddShape(shape);
             }
         }
-        
+    
+        /// <summary>
+        /// Make sure that each cell is exactly the same size
+        /// and leave room for the lines
+        /// </summary>
+        private int CalcGridSide(int screenWidth, int screenHeight)
+        {
+            var gridSide = (int)(Config.GridRatio * Math.Min(screenWidth, screenHeight));
+
+            while ((gridSide - 11) % 10 != 0)
+                gridSide++;
+            return gridSide;
+        }
         public override void Update(int screenWidth, int screenHeight, float timeStamp)
         {
             base.Update(screenWidth, screenHeight, timeStamp);
             
             var screen = new Rectangle(0, 0, screenWidth, screenHeight);
-            var gridSide = (int)(Config.GridRatio * Math.Min(screenWidth, screenHeight));
+            var gridSide = CalcGridSide(screenWidth, screenHeight);
 
             _grid.Width = gridSide;
             _grid.Height = gridSide;
