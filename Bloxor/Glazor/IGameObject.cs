@@ -21,11 +21,7 @@ namespace Bloxor.Glazor
 
         public int DX { get; }
         public int DY { get; }
-
-        public void OnMouseMove(int x, int y);
-        public void OnMouseDown();
-        public void OnMouseUp();
-
+        
         public void CenterInRect(Rectangle rect);
         
         public void Update(int screenWidth, int screenHeight, float timeStamp);

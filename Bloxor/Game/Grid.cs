@@ -18,21 +18,21 @@ namespace Bloxor.Game
             Columns = columns;
         }
 
+        public int CellWidth => Width / Columns;
+        public int CellHeight => Height / Rows;
+        
         public override async ValueTask Render(ICanvas canvas)
         {
             await base.Render(canvas);
-            var cellWidth =  Width / Columns;
-            var cellHeight = Height / Rows;
-            
             for (var row = 0; row <= Rows; ++row)
             {
-                var y = row * cellHeight;
+                var y = row * CellHeight;
                 await canvas.DrawLine(Left, Top + y, Left + Width, Top + y, LineColor);
             }
             
             for (var col = 0; col <= Columns; ++col)
             {
-                var x = col * cellWidth;
+                var x = col * CellWidth;
                 await canvas.DrawLine(Left + x, Top, Left + x, Top + Height, LineColor);
             }
         }

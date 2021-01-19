@@ -4,7 +4,10 @@ namespace Bloxor.Game
     {
         public const string BackgroundColor = "azure";
         
-        // 
+        // Default z-index
+        public const int DefaultZIndex = 100;
+        
+        // Standard font
         public const string Font = "20px arial";
         // Grid
         public const float GridRatio = 0.5f;

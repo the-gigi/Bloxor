@@ -22,11 +22,25 @@ namespace Bloxor.Game
         public int CellWidth { get; set; }
         public int CellHeight { get; set; }
 
+        public List<Shape> Shapes => _shapes;
+
         public void AddShape(Shape shape)
         {
             _shapes.Add(shape);
         }
 
+        public void RemoveShape(Shape shape)
+        {
+            for (var i = 0; i < _shapes.Count; ++i)
+            {
+                if (shape != _shapes[i])
+                    continue;
+                
+                _shapes[i] = null;
+                return;
+            }
+        }
+        
         public void Clear(Shape shape)
         {
             _shapes.Clear();

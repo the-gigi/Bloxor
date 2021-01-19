@@ -7,13 +7,14 @@ using Bloxor.Glazor;
 
 namespace Bloxor.Game
 {
-    public class BloxorManager : GameObject
+    public class BloxorManager : GameObject, IGameEngineEvents
     {
         private ShapeFactory _shapeFactory = new ShapeFactory();
         private IGameEngine _gameEngine;
         private IGameObject _header; 
         BloxorGrid  _grid = new BloxorGrid(new Rectangle(), Config.GridColor);
         BloxorStagingArea  _stagingArea = new BloxorStagingArea(new Rectangle(), Config.StagingAreaColor);
+        private Shape _phantomShape;
 
         public BloxorManager(IGameEngine engine)
         {
@@ -26,6 +27,7 @@ namespace Bloxor.Game
             _gameEngine.AddObject(_grid);
             _gameEngine.AddObject(_stagingArea);
             GenerateShapes();
+            _gameEngine.Subscribe(this);
         }
 
         void GenerateShapes()
@@ -33,6 +35,7 @@ namespace Bloxor.Game
             for (var i = 0; i < 3; ++i)
             {
                 var shape = _shapeFactory.ChooseRandomShape();
+                _gameEngine.AddObject(shape);
                 _stagingArea.AddShape(shape);
             }
         }
@@ -68,12 +71,8 @@ namespace Bloxor.Game
             
             // center grid + staging area vertically
             var offset = (screenHeight - _grid.Height - _stagingArea.Height - Config.GridStagingAreaSpacing) / 2;
-            Console.WriteLine($"screen: {screenWidth}, {screenHeight}");
-            Console.WriteLine($"offset: {offset}");
             _grid.Top = offset;
-            Console.WriteLine($"BEFORE stagingArea bounds: {_stagingArea.Bounds}");
             _stagingArea.Top = _grid.Bottom + Config.GridStagingAreaSpacing;
-            Console.WriteLine($"AFTER stagingArea bounds: {_stagingArea.Bounds}");
             
             // To update the shapes
             // Why 19? longest shape is 5 cells across 3 areas + leave a cell spacing before and after each area
@@ -81,9 +80,43 @@ namespace Bloxor.Game
             var cellSize = _stagingArea.Width / 19;
             _stagingArea.CellWidth = cellSize;
             _stagingArea.CellHeight = cellSize;
-            
-            
             _stagingArea.Update(screenWidth, screenHeight, timeStamp);
+        }
+
+        public override void OnMouseDown(IGameObject o)
+        {
+            var shapes = _stagingArea.Shapes;
+            var shapeCount = _stagingArea.Shapes.Count();
+            for (var i = 0; i < shapeCount; ++i)
+            {
+                var shape = shapes[i];
+                if (shape != o || shape == null)
+                    continue;
+                
+                _stagingArea.RemoveShape(shape);
+                _phantomShape = shape;
+                _phantomShape.CellWidth = _grid.CellWidth;
+                _phantomShape.CellHeight = _grid.CellHeight;
+            }
+        }
+
+        public override void OnMouseMove(int x, int y)
+        {
+            if (_phantomShape == null)
+            {
+                return;
+            }
+        }
+
+        public override void OnMouseUp(IGameObject o)
+        {
+            if (o != _phantomShape)
+            {
+                throw new Exception($"mouse up on wrog object. o: {o}, phantom shape: {_phantomShape}");
+            }
+            
+            _gameEngine.RemoveObject(_phantomShape);
+            _phantomShape = null;
         }
     }
 }

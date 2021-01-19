@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazor.Extensions.Canvas.Canvas2D;
+using Bloxor.Game;
 
 
 namespace Bloxor.Glazor
@@ -39,7 +40,14 @@ namespace Bloxor.Glazor
 
         public IGameObject FindObjectAt(Point p)
         {
-            return _objects.Reverse().First((pair) => pair.Value.Bounds.Contains(p)).Value;
+            //return _objects.First((pair) => pair.Value.Bounds.Contains(p)).Value;
+            var objects = _objects.Select(pair => pair.Value)
+                                                 .Where((o) => o.Bounds.Contains(p))
+                                                 .ToList();
+            objects.Sort((o1,o2) => o1.ZIndex.CompareTo(o2.ZIndex));
+            var obj = objects.Last(); 
+            Console.WriteLine($"<GGG> FindObjectAt({p}): -> {obj}, {obj.Bounds}");
+            return obj;
         }
 
         public void Subscribe(IGameEngineEvents sink)
@@ -55,13 +63,14 @@ namespace Bloxor.Glazor
         {
             _mousePosition.X = x;
             _mousePosition.Y = y;
+            _subscribers.ForEach(s => s.OnMouseMove(x, y));
         }
         
         public void OnMouseDown()
         {
             _mouseButtonDown = true;
             _clickedObject = FindObjectAt(_mousePosition);
-            _subscribers.ForEach(s => s.OnMouseUp(_clickedObject));
+            _subscribers.ForEach(s => s.OnMouseDown(_clickedObject));
         }        
 
         public void OnMouseUp()
@@ -86,10 +95,9 @@ namespace Bloxor.Glazor
         public async ValueTask Render()
         {
             await _canvas.DrawRectangle(0, 0, _screenWidth, _screenHeight, fillColor: "azure");
-            var font = "24px verdana";
-            var text = $"x: {_mousePosition.X}, y: {_mousePosition.Y} pressed: {_mouseButtonDown}";
-            await _canvas.DrawText(10, 30, text, font,"green");
-            
+            var text = $"x: {_mousePosition.X}, y: {_mousePosition.Y} pressed: {_mouseButtonDown} clicked object: {_clickedObject}";
+            await _canvas.DrawText(10, 30, text, Config.Font,"green");
+
             foreach (var obj in _objects.Values)
             {
                 await obj.Render(_canvas);

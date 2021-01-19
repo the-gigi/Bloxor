@@ -8,7 +8,7 @@ namespace Bloxor.Game
 {
     public class Shape : GameObject
     {
-        const int offset = 2;        
+        const int Offset = 2;        
         private string Color { get;  }
         public Point[] Cells { get; }
         
@@ -19,6 +19,7 @@ namespace Bloxor.Game
         {
             Cells = cells;
             Color = color;
+            ZIndex = Config.DefaultZIndex * 2;
         }
 
         //public new int Width => (Cells.Select(c => c.X).Max() + 1) * CellWidth;
@@ -27,11 +28,11 @@ namespace Bloxor.Game
         {
             foreach (var cell in Cells)
             {
-                var left = Left + offset + cell.X * CellWidth;
-                var top = Top + offset + cell.Y * CellHeight;
+                var left = Left + Offset + cell.X * CellWidth;
+                var top = Top + Offset + cell.Y * CellHeight;
 
-                var w = CellWidth - 2 * offset;
-                var h = CellHeight - 2 * offset;
+                var w = CellWidth - 2 * Offset;
+                var h = CellHeight - 2 * Offset;
                 await canvas.DrawRectangle(left, top, w ,h , Config.ShapeBorderColor, Color);
             }
         }

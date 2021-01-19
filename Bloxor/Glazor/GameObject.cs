@@ -12,6 +12,7 @@ namespace Bloxor.Game
             Enabled = true;
             BorderColor = "red";
             BackgroundColor = "";
+            ZIndex = Config.DefaultZIndex;
         }
         
         public int ScreenWidth { get; set; }
@@ -61,15 +62,15 @@ namespace Bloxor.Game
         public int DY => Speed.Y;
 
         
-        public void OnMouseMove(int x, int y)
+        public virtual void OnMouseMove(int x, int y)
         {
         }
         
-        public void OnMouseDown()
+        public virtual void OnMouseDown(IGameObject obj)
         {
         }        
 
-        public void OnMouseUp()
+        public virtual void OnMouseUp(IGameObject obj)
         {
         }
 
