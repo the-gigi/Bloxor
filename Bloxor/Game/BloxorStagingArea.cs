@@ -8,11 +8,11 @@ using Bloxor.Glazor;
 
 namespace Bloxor.Game
 {
-    public class BloxorStagingArea : GameObject
+    public class BloxorStagingArea : Grid
     {
         readonly List<Shape> _shapes;
         
-        public BloxorStagingArea(Rectangle bounds, string borderColor)
+        public BloxorStagingArea(Rectangle bounds, string borderColor) : base(bounds, 1, 3, "purple")
         {
             _shapes = new List<Shape>();
             Bounds = bounds;
@@ -42,6 +42,8 @@ namespace Bloxor.Game
                     continue;
 
                 var w = Width / 3;
+                shape.Width = (shape.Cells.Select(c => c.X).Max() + 1) * CellWidth;
+                shape.Height = (shape.Cells.Select(c => c.Y).Max() + 1) * CellHeight;
                 var rect = new Rectangle(Left + i * w, Top, w, Height);
                 shape.CenterInRect(rect);                
             }
@@ -49,8 +51,7 @@ namespace Bloxor.Game
         public override async ValueTask Render(ICanvas canvas)
         {
             await base.Render(canvas);
-            var shapeCount = _shapes.Count(shape => shape != null);
-            await canvas.DrawText(Left + 10, Top + 10, $"{Bounds}", Config.Font, "black", "green");
+            //await canvas.DrawText(Left + 10, Top + 10, $"{Bounds}", Config.Font, "black", "green");
             foreach (var shape in _shapes.Where(shape => shape != null))
             {
                 shape.CellWidth = CellWidth;

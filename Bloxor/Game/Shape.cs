@@ -10,7 +10,7 @@ namespace Bloxor.Game
     {
         const int offset = 2;        
         private string Color { get;  }
-        private Point[] Cells { get; }
+        public Point[] Cells { get; }
         
         public int CellWidth  { get; set; }
         public int CellHeight { get; set; }
@@ -21,7 +21,7 @@ namespace Bloxor.Game
             Color = color;
         }
 
-        public new int Width => (Cells.Select(c => c.X).Max() + 1) * CellWidth;
+        //public new int Width => (Cells.Select(c => c.X).Max() + 1) * CellWidth;
         
         public override async ValueTask Render(ICanvas canvas)
         {
