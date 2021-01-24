@@ -36,5 +36,19 @@ namespace Bloxor.Game
                 await canvas.DrawLine(Left + x, Top, Left + x, Top + Height, LineColor);
             }
         }
+
+        public Point FindCellByCoordinates(int x, int y)
+        {
+            var cellX = (x - Left) / CellWidth;
+            var cellY = (y - Top) / CellHeight;
+
+            if (cellX < 0 || cellX > Columns - 1 || cellY < 0 || cellY > Rows - 1)
+            {
+                cellX = -1;
+                cellY = -1;
+            }
+
+            return new Point(cellX, cellY);
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Bloxor.Game
     public class Shape : GameObject
     {
         const int Offset = 2;        
-        private string Color { get;  }
+        public string Color { get;  }
         public Point[] Cells { get; }
         
         public int CellWidth  { get; set; }

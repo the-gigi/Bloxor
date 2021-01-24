@@ -60,20 +60,7 @@ namespace Bloxor.Game
 
         public int DX => Speed.X;
         public int DY => Speed.Y;
-
         
-        public virtual void OnMouseMove(int x, int y)
-        {
-        }
-        
-        public virtual void OnMouseDown(IGameObject obj)
-        {
-        }        
-
-        public virtual void OnMouseUp(IGameObject obj)
-        {
-        }
-
         public void CenterInRect(Rectangle rect)
         {
             if (rect.Width < Width || rect.Height < Height)

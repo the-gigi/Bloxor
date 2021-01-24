@@ -33,7 +33,7 @@ namespace Bloxor.Game
 
                     var left = Left + col * cellWidth;
                     var top = Top + row * cellWidth;
-                    await canvas.DrawRectangle(left, top, cellWidth, cellHeight, fillColor: "red");
+                    await canvas.DrawRectangle(left, top, cellWidth, cellHeight, fillColor: Cells[row, col]);
                 }
             }
         }

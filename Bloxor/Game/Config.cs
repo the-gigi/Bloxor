@@ -11,7 +11,7 @@ namespace Bloxor.Game
         public const string Font = "20px arial";
         // Grid
         public const float GridRatio = 0.5f;
-        public const string GridColor = "gray";
+        public const string GridColor = "#cccccc";
         
         // Staging Area
         public const string StagingAreaColor = "purple";
@@ -20,5 +20,8 @@ namespace Bloxor.Game
         
         // The space between the grid and the staging area
         public const int GridStagingAreaSpacing = 10;
+        
+        // shadow
+        public const float ShadowBrightness = 0.8f;
     }
 }

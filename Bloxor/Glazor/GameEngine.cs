@@ -45,8 +45,7 @@ namespace Bloxor.Glazor
                                                  .Where((o) => o.Bounds.Contains(p))
                                                  .ToList();
             objects.Sort((o1,o2) => o1.ZIndex.CompareTo(o2.ZIndex));
-            var obj = objects.Last(); 
-            Console.WriteLine($"<GGG> FindObjectAt({p}): -> {obj}, {obj.Bounds}");
+            var obj = objects.Last();
             return obj;
         }
 
@@ -70,7 +69,7 @@ namespace Bloxor.Glazor
         {
             _mouseButtonDown = true;
             _clickedObject = FindObjectAt(_mousePosition);
-            _subscribers.ForEach(s => s.OnMouseDown(_clickedObject));
+            _subscribers.ForEach(s => s.OnMouseDown(_clickedObject, _mousePosition.X, _mousePosition.Y));
         }        
 
         public void OnMouseUp()
