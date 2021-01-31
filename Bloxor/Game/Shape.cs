@@ -22,6 +22,12 @@ namespace Bloxor.Game
             ZIndex = Config.DefaultZIndex * 2;
         }
 
+        public override string ToString()
+        {
+            var cells = string.Join(", ", Cells.ToList().Select(p => $"({p.X}, {p.Y})"));
+            return $"Shape: [{cells}]";
+        }
+
         //public new int Width => (Cells.Select(c => c.X).Max() + 1) * CellWidth;
         
         public override async ValueTask Render(ICanvas canvas)

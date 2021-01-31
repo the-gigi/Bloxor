@@ -108,10 +108,11 @@ namespace Bloxor.Game
                 _phantomShape = shape;
                 _phantomShape.CellWidth = _grid.CellWidth;
                 _phantomShape.CellHeight = _grid.CellHeight;
+                Logger.Log(_phantomShape);
             }
         }
 
-        public void UpdatePhantom()
+        private void UpdatePhantom()
         {
             if (_phantomShape == null)
                 return;
@@ -120,26 +121,30 @@ namespace Bloxor.Game
             var dy = _currMouseY - _prevMouseY;
 
             var firstTime = _prevMouseX == -1 && _prevMouseY == -1;
-
-            var prevCell = _grid.FindCellByCoordinates(_prevMouseX, _prevMouseY);
-            var currCell = _grid.FindCellByCoordinates(_currMouseX, _currMouseY);
-
+            
             _prevMouseX = _currMouseX;
             _prevMouseY = _currMouseY;
 
             if (firstTime)
                 return;
-
+            
+            var centerX = _phantomShape.Left + _phantomShape.CellWidth / 2;
+            var centerY = _phantomShape.Top + _phantomShape.CellHeight / 2;
+            var prevCell = _grid.FindCellByCoordinates(centerX, centerY);
+            
             // Update phantom location
             _phantomShape.Left += dx;
             _phantomShape.Top += dy;
 
-            // update shadow
-            // shadow didn't move. just bail out
+            centerX = _phantomShape.Left + _phantomShape.CellWidth / 2;
+            centerY = _phantomShape.Top + _phantomShape.CellHeight / 2;
+            var currCell = _grid.FindCellByCoordinates(centerX, centerY);
+            
+            // phantom shape still over same tiles. just bail out
             if (prevCell == currCell)
                 return;
 
-            Console.WriteLine("[GGG] clean up previous shadow if exists");
+            Logger.Log("clean up previous shadow if exists");
             // clean up previous shadow if exists 
             if (prevCell.X != -1)
             {
@@ -151,24 +156,26 @@ namespace Bloxor.Game
                 }
             }
 
-            // if any part of the shape is out of the grid bail out
-            Console.WriteLine("[GGG] if any part of the shape is out of the grid bail out");
+            // if any part of the phantom shape is out of the grid or overlaps an occupied tile bail out
+            Logger.Log("if any part of the shape is out of the grid bail out");
             foreach (var p in _phantomShape.Cells)
             {
                 var row = p.Y + currCell.Y;
                 var col = p.X + currCell.X;
                 if (row < 0 || row > _grid.Rows - 1 || col < 0 || col > _grid.Columns - 1)
                     return;
+                if (_grid.Cells[row, col] != null)
+                    return;
             }
 
             // Set new shadow
-            Console.WriteLine("[GGG] Set new shadow");
             var shadowColor = Color.AdjustBrightness(_phantomShape.Color, Config.ShadowBrightness);
-            Console.WriteLine($"[GGG] Setting new shadow: {shadowColor}");
+            Logger.Log($"Setting new shadow. color {shadowColor}, shape: {_phantomShape}");
             foreach (var p in _phantomShape.Cells)
             {
                 var row = p.Y + currCell.Y;
                 var col = p.X + currCell.X;
+                Logger.Log($"cell: ({row}, {col})");
                 _grid.Cells[row, col] = shadowColor;
             }
         }
@@ -183,7 +190,7 @@ namespace Bloxor.Game
         {
             if (o != _phantomShape)
             {
-                throw new Exception($"mouse up on wrog object. o: {o}, phantom shape: {_phantomShape}");
+                throw new Exception($"mouse up on wrong object. o: {o}, phantom shape: {_phantomShape}");
             }
 
             _gameEngine.RemoveObject(_phantomShape);

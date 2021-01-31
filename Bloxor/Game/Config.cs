@@ -22,6 +22,6 @@ namespace Bloxor.Game
         public const int GridStagingAreaSpacing = 10;
         
         // shadow
-        public const float ShadowBrightness = 0.8f;
+        public const float ShadowBrightness = 1.1f;
     }
 }
