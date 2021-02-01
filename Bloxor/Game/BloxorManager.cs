@@ -15,6 +15,7 @@ namespace Bloxor.Game
         BloxorGrid _grid = new BloxorGrid(new Rectangle(), Config.GridColor);
         BloxorStagingArea _stagingArea = new BloxorStagingArea(new Rectangle(), Config.StagingAreaColor);
         private Shape _phantomShape;
+        private bool _previousShadow = false;
 
         private int _prevMouseX = -1;
         private int _prevMouseY = -1;
@@ -144,9 +145,8 @@ namespace Bloxor.Game
             if (prevCell == currCell)
                 return;
 
-            Logger.Log("clean up previous shadow if exists");
             // clean up previous shadow if exists 
-            if (prevCell.X != -1)
+            if (_previousShadow)
             {
                 foreach (var p in _phantomShape.Cells)
                 {
@@ -156,8 +156,8 @@ namespace Bloxor.Game
                 }
             }
 
+            _previousShadow = false;
             // if any part of the phantom shape is out of the grid or overlaps an occupied tile bail out
-            Logger.Log("if any part of the shape is out of the grid bail out");
             foreach (var p in _phantomShape.Cells)
             {
                 var row = p.Y + currCell.Y;
@@ -170,14 +170,13 @@ namespace Bloxor.Game
 
             // Set new shadow
             var shadowColor = Color.AdjustBrightness(_phantomShape.Color, Config.ShadowBrightness);
-            Logger.Log($"Setting new shadow. color {shadowColor}, shape: {_phantomShape}");
             foreach (var p in _phantomShape.Cells)
             {
                 var row = p.Y + currCell.Y;
                 var col = p.X + currCell.X;
-                Logger.Log($"cell: ({row}, {col})");
                 _grid.Cells[row, col] = shadowColor;
             }
+            _previousShadow = true;
         }
 
         public void OnMouseMove(int x, int y)

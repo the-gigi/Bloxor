@@ -77,9 +77,9 @@ namespace Bloxor.Glazor
                 var argb = int.Parse(colorName.Replace("#", ""), NumberStyles.HexNumber);
                 var color = System.Drawing.Color.FromArgb(argb);
                 var nc = System.Drawing.Color.FromArgb(
-                    Math.Clamp((int) (color.R * factor), 0, 255),
-                    Math.Clamp((int) (color.G * factor), 0, 255),
-                    Math.Clamp((int) (color.B * factor), 0, 255));
+                    Math.Clamp((int) (color.R * factor), 10, 255),
+                    Math.Clamp((int) (color.G * factor), 10, 255),
+                    Math.Clamp((int) (color.B * factor), 10, 255));
                     
                 return $"#{nc.R:X2}{nc.G:X2}{nc.B:X2}";
             }
