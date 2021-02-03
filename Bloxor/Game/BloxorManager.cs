@@ -32,12 +32,14 @@ namespace Bloxor.Game
 
             _gameEngine.AddObject(_grid);
             _gameEngine.AddObject(_stagingArea);
-            GenerateShapes();
             _gameEngine.Subscribe(this);
+            
+            GenerateShapes();
         }
 
         void GenerateShapes()
         {
+            _stagingArea.Clear();
             for (var i = 0; i < 3; ++i)
             {
                 var shape = _shapeFactory.ChooseRandomShape();
@@ -81,16 +83,8 @@ namespace Bloxor.Game
             _grid.Top = offset;
 
             UpdatePhantom();
-
-            _stagingArea.Top = _grid.Bottom + Config.GridStagingAreaSpacing;
-
-            // To update the shapes
-            // Why 19? longest shape is 5 cells across 3 areas + leave a cell spacing before and after each area
-            // 1 + 5 + 1 + 5 + 1 + 5 + 1 = 19
-            var cellSize = _stagingArea.Width / 19;
-            _stagingArea.CellWidth = cellSize;
-            _stagingArea.CellHeight = cellSize;
-            _stagingArea.Update(screenWidth, screenHeight, timeStamp);
+            UpdateGrid();
+            UpdateStagingArea(screenWidth, screenHeight, timeStamp);
         }
 
         public void OnMouseDown(IGameObject o, int x, int y)
@@ -179,6 +173,29 @@ namespace Bloxor.Game
             _previousShadow = true;
         }
 
+        private void UpdateGrid()
+        {
+            _grid.Clear();
+        }
+
+        private void UpdateStagingArea(int screenWidth, int screenHeight, float timeStamp)
+        {
+            if (_stagingArea.Shapes.Count(shape => shape != null) == 0)
+            {
+                GenerateShapes();
+            }
+            
+            _stagingArea.Top = _grid.Bottom + Config.GridStagingAreaSpacing;
+
+            // To update the shapes
+            // Why 19? longest shape is 5 cells across 3 areas + leave a cell spacing before and after each area
+            // 1 + 5 + 1 + 5 + 1 + 5 + 1 = 19
+            var cellSize = _stagingArea.Width / 19;
+            _stagingArea.CellWidth = cellSize;
+            _stagingArea.CellHeight = cellSize;
+            _stagingArea.Update(screenWidth, screenHeight, timeStamp);
+        }
+        
         public void OnMouseMove(int x, int y)
         {
             _currMouseX = x;

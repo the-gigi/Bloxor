@@ -41,7 +41,7 @@ namespace Bloxor.Game
             }
         }
         
-        public void Clear(Shape shape)
+        public void Clear()
         {
             _shapes.Clear();
         }
