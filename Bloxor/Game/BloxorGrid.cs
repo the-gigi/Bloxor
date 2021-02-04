@@ -31,17 +31,25 @@ namespace Bloxor.Game
             return Enumerable.Range(0, RowCount).All(row => Cells[row, col] != null);
         }
         
-        public List<int> CompleteRows => Enumerable.Range(0, RowCount).Where(IsRowFull).ToList();
-        
-
-        public List<int> CompleteColumns => Enumerable.Range(0, ColumnCount).Where(IsColumnFull).ToList();
-
         /// <summary>
         /// Clear completed rows and columns
         /// </summary>
-        public void Clear()
+        public void ClearComplete()
         {
-            CompleteRows.ForEach(row =>
+            var completeRows = Enumerable.Range(0, RowCount).Where(IsRowFull).ToList();
+            var completeColumns = Enumerable.Range(0, ColumnCount).Where(IsColumnFull).ToList();
+
+            if (completeRows.Count > 0)
+            {
+                Logger.Log($"complete rows: {completeRows}");
+            }
+
+            if (completeColumns.Count > 0)
+            {
+                Logger.Log($"complete columns: {completeRows}");
+            }
+            
+            completeRows.ForEach(row =>
             {
                 for (var col = 0; col < ColumnCount; col++)
                 {
@@ -49,7 +57,7 @@ namespace Bloxor.Game
                 }
             });
             
-            CompleteColumns.ForEach(col =>
+            completeColumns.ForEach(col =>
             {
                 for (var row = 0; row < RowCount; row++)
                 {

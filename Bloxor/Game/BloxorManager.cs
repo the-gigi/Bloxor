@@ -37,7 +37,7 @@ namespace Bloxor.Game
             GenerateShapes();
         }
 
-        void GenerateShapes()
+        private void GenerateShapes()
         {
             _stagingArea.Clear();
             for (var i = 0; i < 3; ++i)
@@ -175,12 +175,15 @@ namespace Bloxor.Game
 
         private void UpdateGrid()
         {
-            _grid.Clear();
+            if (_phantomShape == null)
+            {
+                _grid.ClearComplete();    
+            }
         }
 
         private void UpdateStagingArea(int screenWidth, int screenHeight, float timeStamp)
         {
-            if (_stagingArea.Shapes.Count(shape => shape != null) == 0)
+            if (_stagingArea.Shapes.Count(shape => shape != null) == 0 && _phantomShape == null)
             {
                 GenerateShapes();
             }
