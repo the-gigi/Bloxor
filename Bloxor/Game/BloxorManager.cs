@@ -11,7 +11,7 @@ namespace Bloxor.Game
     {
         private ShapeFactory _shapeFactory = new ShapeFactory();
         private IGameEngine _gameEngine;
-        private IGameObject _header;
+        private GameObject _header;
         BloxorGrid _grid = new BloxorGrid(new Rectangle(), Config.GridColor);
         BloxorStagingArea _stagingArea = new BloxorStagingArea(new Rectangle(), Config.StagingAreaColor);
         private Shape _phantomShape;
@@ -87,7 +87,7 @@ namespace Bloxor.Game
             UpdateStagingArea(screenWidth, screenHeight, timeStamp);
         }
 
-        public void OnMouseDown(IGameObject o, int x, int y)
+        public void OnMouseDown(GameObject o, int x, int y)
         {
             _prevMouseX = x;
             _prevMouseY = y;
@@ -205,7 +205,7 @@ namespace Bloxor.Game
             _currMouseY = y;
         }
 
-        public void OnMouseUp(IGameObject o)
+        public void OnMouseUp(GameObject o)
         {
             if (o != _phantomShape)
             {

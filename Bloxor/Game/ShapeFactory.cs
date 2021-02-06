@@ -59,14 +59,11 @@ namespace Bloxor.Game
                 new Point(2, 2),
             };
             var elle2 = RotateShape(elle1);
-            var elle3 = RotateShape(elle2);
-            var elle4 = RotateShape(elle3);
             
+            color = "orange";
+            AddShape(10, elle1, color);
             color = "green";
-            AddShape(1, elle1, color);
-            AddShape(1, elle2, color);
-            AddShape(1, elle3, color);
-            AddShape(1, elle4, color);
+            AddShape(10, elle2, color);
 
             _totalWeight = _shapes.Select(x => x.Item1).Sum();
         }

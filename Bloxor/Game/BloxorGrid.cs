@@ -38,16 +38,6 @@ namespace Bloxor.Game
         {
             var completeRows = Enumerable.Range(0, RowCount).Where(IsRowFull).ToList();
             var completeColumns = Enumerable.Range(0, ColumnCount).Where(IsColumnFull).ToList();
-
-            if (completeRows.Count > 0)
-            {
-                Logger.Log($"complete rows: {completeRows}");
-            }
-
-            if (completeColumns.Count > 0)
-            {
-                Logger.Log($"complete columns: {completeRows}");
-            }
             
             completeRows.ForEach(row =>
             {

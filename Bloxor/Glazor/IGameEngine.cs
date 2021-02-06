@@ -1,12 +1,13 @@
 using System.Drawing;
+using Bloxor.Game;
 
 namespace Bloxor.Glazor
 {
     public interface IGameEngine
     {
-        void AddObject(IGameObject o);
-        void RemoveObject(IGameObject o);
-        IGameObject FindObjectAt(Point p);
+        void AddObject(GameObject o);
+        void RemoveObject(GameObject o);
+        GameObject FindObjectAt(Point p);
 
         void Subscribe(IGameEngineEvents sink);
         void Unsubscribe(IGameEngineEvents sink);

@@ -11,41 +11,49 @@ namespace Bloxor.Glazor
 {
     public class GameEngine : IGameEngine
     {
+        const int mouseOffsetX = 8;
+        const int mouseOffsetY = 8;
+        
         ICanvas _canvas;
         Point _mousePosition;
         bool _mouseButtonDown;
         int _screenWidth;
         int _screenHeight;
-        SortedList<Tuple<int, int>, IGameObject> _objects = new SortedList<Tuple<int, int>, IGameObject>();
-        IGameObject _clickedObject;
+        SortedList<Tuple<int, int>, GameObject> _objects = new SortedList<Tuple<int, int>, GameObject>();
+        GameObject _clickedObject;
         readonly GameTime _gameTime = new GameTime();
         readonly List<IGameEngineEvents> _subscribers = new List<IGameEngineEvents>();
         
         public async ValueTask InitAsync(Canvas2DContext canvas)
         {
+            await canvas.SetLineWidthAsync(1.0f);
             _canvas = new Canvas(canvas);
+            
         }
 
-        public void AddObject(IGameObject o)
+        public void AddObject(GameObject o)
         {
             var key = new Tuple<int, int>(o.ZIndex, o.GetHashCode()); 
             _objects.Add(key, o);
         }
 
-        public void RemoveObject(IGameObject o)
+        public void RemoveObject(GameObject o)
         {
             var key = new Tuple<int, int>(o.ZIndex, o.GetHashCode());
             _objects.Remove(key);
         }
 
-        public IGameObject FindObjectAt(Point p)
+        public GameObject FindObjectAt(Point p)
         {
-            //return _objects.First((pair) => pair.Value.Bounds.Contains(p)).Value;
             var objects = _objects.Select(pair => pair.Value)
-                                                 .Where((o) => o.Bounds.Contains(p))
+                                                 .Where((o) => o.Contains(p))
                                                  .ToList();
             objects.Sort((o1,o2) => o1.ZIndex.CompareTo(o2.ZIndex));
             var obj = objects.Last();
+            if (obj != null)
+            {
+                Logger.Log(obj);
+            }
             return obj;
         }
 
@@ -60,6 +68,10 @@ namespace Bloxor.Glazor
         }
         public void OnMouseMove(int x, int y)
         {
+            // Fixing the moise position is necessary because Blazor doesn't take teh bounding client rect into account
+            // See https://github.com/dotnet/aspnetcore/issues/20960
+            x -= mouseOffsetX;
+            y -= mouseOffsetY;
             _mousePosition.X = x;
             _mousePosition.Y = y;
             _subscribers.ForEach(s => s.OnMouseMove(x, y));

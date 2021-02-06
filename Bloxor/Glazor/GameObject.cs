@@ -4,7 +4,7 @@ using Bloxor.Glazor;
 
 namespace Bloxor.Game
 {
-    public class GameObject : IGameObject
+    public class GameObject
     {
         protected GameObject()
         {
@@ -71,6 +71,12 @@ namespace Bloxor.Game
             Left = rect.Left + (rect.Width - Width) / 2;
             Top= rect.Top + (rect.Height - Height) / 2;
         }
+
+        public virtual bool Contains(Point p)
+        {
+            return Bounds.Contains(p);
+        }
+        
         public virtual void Update(int screenWidth, int screenHeight, float timeStamp)
         {
             ScreenWidth = screenWidth;

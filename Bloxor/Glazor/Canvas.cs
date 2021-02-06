@@ -25,20 +25,21 @@ namespace Bloxor.Glazor
 
         public async ValueTask DrawRectangle(int left, int top, int width, int height, string color = "", string fillColor = "")
         {
+            await _canvas.SetStrokeStyleAsync(color);
+            if (color != "")
+            {
+                await _canvas.StrokeRectAsync(left, top, width, height);
+                await _canvas.SetStrokeStyleAsync("");
+            }
+            
+            await _canvas.SetFillStyleAsync(fillColor);
             if (fillColor != "")
             {
-                await _canvas.SetFillStyleAsync(fillColor);
                 await _canvas.FillRectAsync(left, top, width, height);
                 await _canvas.SetFillStyleAsync("");
             }
-            
-            if (color != "")
-            {
-                await _canvas.SetStrokeStyleAsync(color);
-                await _canvas.StrokeRectAsync(left, top, width, height);
-            }
         }
-
+        
         public async ValueTask DrawText(int left, int top, string text, string font, string color = "", string fillColor = "")
         {
             await _canvas.SetFontAsync(font);
