@@ -23,5 +23,8 @@ namespace Bloxor.Game
         
         // shadow
         public const float ShadowBrightness = 1.1f;
+        
+        // Header
+        public const int HeaderHeight = 35; 
     }
 }

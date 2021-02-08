@@ -11,11 +11,11 @@ namespace Bloxor.Game
     {
         private ShapeFactory _shapeFactory = new ShapeFactory();
         private IGameEngine _gameEngine;
-        private GameObject _header;
-        BloxorGrid _grid = new BloxorGrid(new Rectangle(), Config.GridColor);
-        BloxorStagingArea _stagingArea = new BloxorStagingArea(new Rectangle(), Config.StagingAreaColor);
+        private BloxorHeader _header = new BloxorHeader(new Rectangle(), Config.GridColor);
+        private BloxorGrid _grid = new BloxorGrid(new Rectangle(), Config.GridColor);
+        private BloxorStagingArea _stagingArea = new BloxorStagingArea(new Rectangle(), Config.StagingAreaColor);
         private Shape _phantomShape;
-        private bool _previousShadow = false;
+        private bool _previousShadow;
 
         private int _prevMouseX = -1;
         private int _prevMouseY = -1;
@@ -27,9 +27,10 @@ namespace Bloxor.Game
             _gameEngine = engine;
             BackgroundColor = Config.BackgroundColor;
 
-            _grid.Bounds = new Rectangle(0, 0, 0, 0);
-            _stagingArea.Bounds = new Rectangle(0, 0, 0, 0);
+            // _grid.Bounds = new Rectangle(0, 0, 0, 0);
+            // _stagingArea.Bounds = new Rectangle(0, 0, 0, 0);
 
+            _gameEngine.AddObject(_header);
             _gameEngine.AddObject(_grid);
             _gameEngine.AddObject(_stagingArea);
             _gameEngine.Subscribe(this);
@@ -68,19 +69,25 @@ namespace Bloxor.Game
             var screen = new Rectangle(0, 0, screenWidth, screenHeight);
             var gridSide = CalcGridSide(screenWidth, screenHeight);
 
+            _header.Width = gridSide;
+            _header.Height = Config.HeaderHeight;
+            
             _grid.Width = gridSide;
             _grid.Height = gridSide;
 
             _stagingArea.Width = gridSide;
-            _stagingArea.Height = gridSide / 2;
+            _stagingArea.Height = gridSide / 2 - _header.Height;
 
             // Center horizontally (will override the vertical centering)
+            _header.CenterInRect(screen);
             _grid.CenterInRect(screen);
             _stagingArea.CenterInRect(screen);
 
             // center grid + staging area vertically
-            var offset = (screenHeight - _grid.Height - _stagingArea.Height - Config.GridStagingAreaSpacing) / 2;
+            var totalHeight = _header.Height + _grid.Height + _stagingArea.Height;
+            var offset = (screenHeight - totalHeight - Config.GridStagingAreaSpacing) / 2;
             _grid.Top = offset;
+            _header.Top = _grid.Top - _header.Height;
 
             UpdatePhantom();
             UpdateGrid();
@@ -177,7 +184,24 @@ namespace Bloxor.Game
         {
             if (_phantomShape == null)
             {
-                _grid.ClearComplete();    
+                var rows = _grid.CompleteRows;
+                var columns = _grid.CompleteColumns;
+
+                var total = rows.Count + columns.Count;
+                _header.Score += 10 * total;
+                // 50 points bonus for clearing more than one row
+                _header.Score += 5 * Math.Max(0, rows.Count - 1);
+                // 50 points bonus for clearing more than one column
+                _header.Score += 5 * Math.Max(0, columns.Count - 1);
+                // 50 points bonus for clearing both rows and columns
+                _header.Score += 5 * Math.Min(rows.Count, columns.Count);
+                if (_header.Score > _header.HighScore)
+                {
+                    _header.HighScore = _header.Score;
+                }
+                
+                
+                _grid.Clear(rows, columns);    
             }
         }
 
